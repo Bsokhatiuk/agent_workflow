@@ -1,0 +1,86 @@
+{
+  "slug": "_scaffold",
+  "tasks": [
+    {
+      "id": "S1",
+      "title": "Create the pnpm workspace: apps/server, apps/web, packages/shared with TypeScript configs and root scripts",
+      "layer": "scaffold",
+      "deps": [],
+      "acs": [],
+      "dod": "`pnpm install` and `pnpm build` succeed on the empty workspace; root scripts build/test/lint/typecheck exist",
+      "files_hint": ["package.json", "pnpm-workspace.yaml", "tsconfig.base.json", "apps/server/", "apps/web/", "packages/shared/"]
+    },
+    {
+      "id": "S2",
+      "title": "Server skeleton: Fastify composition root with /health, AppError envelope handler, UUIDv7 helper, empty module folders, static serving of the web build",
+      "layer": "scaffold",
+      "deps": ["S1"],
+      "acs": [],
+      "dod": "the server boots and GET /health returns 200; an AppError thrown in a test route is rendered as {error:{code,message}}",
+      "files_hint": ["apps/server/src/main.ts", "apps/server/src/shared/errors.ts", "apps/server/src/shared/ids.ts", "apps/server/src/modules/"]
+    },
+    {
+      "id": "S3",
+      "title": "Wire Vitest (unit + *.int.test.ts with Testcontainers Postgres) and a boot smoke test",
+      "layer": "scaffold",
+      "deps": ["S2"],
+      "acs": [],
+      "dod": "`pnpm test` runs green: the app-boots smoke test passes and one integration test connects to a Testcontainers Postgres",
+      "files_hint": ["vitest.config.ts", "apps/server/src/main.test.ts", "apps/server/test/"]
+    },
+    {
+      "id": "S4",
+      "title": "Set up Kysely + Migrator with an initial empty migration, migrate:latest / migrate:down scripts, docker compose Postgres for local dev",
+      "layer": "scaffold",
+      "deps": ["S2"],
+      "acs": [],
+      "dod": "the migration tool applies and reverts the initial migration cleanly against local Postgres",
+      "files_hint": ["apps/server/migrations/", "apps/server/src/shared/db.ts", "docker-compose.yml"]
+    },
+    {
+      "id": "S5",
+      "title": "Mini App skeleton: React + Vite with @telegram-apps/sdk-react, telegram-ui AppRoot, TanStack Query, and an API client sending `Authorization: tma <initData>`",
+      "layer": "scaffold",
+      "deps": ["S1"],
+      "acs": [],
+      "dod": "`pnpm --filter web build` produces static assets; the app renders a placeholder screen in the browser with telegram-ui theming",
+      "files_hint": ["apps/web/src/main.tsx", "apps/web/src/shared/api/", "apps/web/src/shared/ui/", "apps/web/vite.config.ts"]
+    },
+    {
+      "id": "S6",
+      "title": "grammY bot in webhook mode mounted on the server: /start replies with a button that opens the Mini App",
+      "layer": "scaffold",
+      "deps": ["S2"],
+      "acs": [],
+      "dod": "the webhook route is registered and a unit test feeding a fake /start update gets a reply with a web_app button; no real token needed in tests",
+      "files_hint": ["apps/server/src/bot/"]
+    },
+    {
+      "id": "S7",
+      "title": "Biome config + GitHub Actions CI (install, typecheck, lint, test with Docker for Testcontainers)",
+      "layer": "scaffold",
+      "deps": ["S3"],
+      "acs": [],
+      "dod": "`pnpm lint` and `pnpm typecheck` pass locally; CI workflow is valid and its commands match the root scripts",
+      "files_hint": ["biome.json", ".github/workflows/ci.yml"]
+    },
+    {
+      "id": "S8",
+      "title": "Dockerfile building web + server into one image; .env.example with BOT_TOKEN, DATABASE_URL, WEBAPP_URL",
+      "layer": "scaffold",
+      "deps": ["S4", "S5", "S6"],
+      "acs": [],
+      "dod": "`docker build` succeeds and the container boots against compose Postgres, serving /health and the Mini App static files",
+      "files_hint": ["Dockerfile", ".dockerignore", ".env.example"]
+    },
+    {
+      "id": "S9",
+      "title": "Add the project conventions section to CLAUDE.md from docs/architecture-map.md (keep the existing behavioral guidelines)",
+      "layer": "scaffold",
+      "deps": ["S1"],
+      "acs": [],
+      "dod": "CLAUDE.md reflects the foundation map's conventions (layers, errors, auth, IDs, time, migrations, tests) without removing existing content",
+      "files_hint": ["CLAUDE.md"]
+    }
+  ]
+}
