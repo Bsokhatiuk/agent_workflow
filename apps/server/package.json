@@ -1,0 +1,28 @@
+{
+  "name": "server",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "dev": "node --env-file-if-exists=../../.env --watch src/main.ts",
+    "start": "node dist/src/main.js",
+    "migrate:latest": "node --env-file-if-exists=../../.env src/migrate.ts latest",
+    "migrate:down": "node --env-file-if-exists=../../.env src/migrate.ts down"
+  },
+  "dependencies": {
+    "@fastify/static": "^10.1.8",
+    "fastify": "^5.12.7",
+    "grammy": "^1.46.0",
+    "kysely": "^0.29.7",
+    "pg": "^8.23.1",
+    "shared": "workspace:*",
+    "uuid": "^14.0.3",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@testcontainers/postgresql": "^12.2.1",
+    "@types/pg": "^8.23.1",
+    "testcontainers": "^12.2.1"
+  }
+}
